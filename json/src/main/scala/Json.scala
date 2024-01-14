@@ -13,4 +13,15 @@ object Json {
   final case class JsonArray(value: List[Json]) extends Json
   final case class JsonObj(value: Map[String, Json]) extends Json
 
+
+  def prettyPrint(json: Json): String = {
+    json match {
+      case JsonNull => "null"
+      case JsonInt(value) => s"$value"
+      case JsonString(value) => "\"" + value + "\""
+      case JsonBoolean(value) => s"$value"
+      case JsonArray(value) => value.map(prettyPrint).mkString("[", ", ", "]")
+      case JsonObj(value) => value.toList.map {case (key, value) => "\"" + key + "\": " + prettyPrint(value)}.mkString("{", ", ", "}")
+    }
+  }
 }
