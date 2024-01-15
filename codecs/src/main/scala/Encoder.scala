@@ -8,8 +8,10 @@ sealed trait JsonEncoder[A] {
 
 object JsonEncoder {
 
-  def apply[A] = ???
-  def from[A] = ???
+  def apply[A](implicit encoder: JsonEncoder[A]): JsonEncoder[A] = encoder
+  def from[A](f: A => Json): JsonEncoder[A] = new JsonEncoder[A] {
+    override def encode(value: A): Json = f(value)
+  }
 
   implicit val intEncoder = ???
   implicit val stringEncoder = ???
