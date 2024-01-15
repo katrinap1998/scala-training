@@ -1,6 +1,7 @@
 package com.jpmc.codecs
 
 import com.jpmc.json.Json
+import com.jpmc.json.Json.{JsonArray, JsonObj}
 
 sealed trait JsonEncoder[A] {
   def encode(value: A): Json
@@ -13,12 +14,12 @@ object JsonEncoder {
     override def encode(value: A): Json = f(value)
   }
 
-  implicit val intEncoder = ???
-  implicit val stringEncoder = ???
-  implicit val booleanEncoder = ???
+  implicit val intEncoder: JsonEncoder[Int] = ???
+  implicit val stringEncoder: JsonEncoder[String] = ???
+  implicit val booleanEncoder: JsonEncoder[Boolean] = ???
 
-  implicit def arrayEncoder = ???
-  implicit def objectEncoder = ???
-  implicit def optionEncoder = ???
-  implicit def eitherEncoder = ???
+  implicit def arrayEncoder: JsonEncoder[JsonArray] = ???
+  implicit def objectEncoder: JsonEncoder[JsonObj] = ???
+  implicit def optionEncoder[A]: JsonEncoder[Option[A]] = ???
+  implicit def eitherEncoder[A,B]: JsonEncoder[Either[A, B]] = ???
 }
