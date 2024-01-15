@@ -24,8 +24,20 @@ object JsonEncoder {
     override def encode(value: Boolean): Json = Json.JsonBoolean(value)
   }
 
-  implicit def arrayEncoder: JsonEncoder[JsonArray] = ???
+  implicit def arrayEncoder: JsonEncoder[JsonArray] = new JsonEncoder[JsonArray] {
+    override def encode(value: JsonArray): Json = value
+  }
   implicit def objectEncoder: JsonEncoder[JsonObj] = ???
-  implicit def optionEncoder[A]: JsonEncoder[Option[A]] = ???
-  implicit def eitherEncoder[A,B]: JsonEncoder[Either[A, B]] = ???
+
+  implicit def optionEncoder[A](implicit encoder: JsonEncoder[A]): JsonEncoder[Option[A]] = from {
+    case Some(value) => encoder.encode(value)
+    case None => Json.JsonNull
+  }
+
+  implicit def eitherEncoder[A,B](implicit encoderA: JsonEncoder[A], encoderB: JsonEncoder[B]): JsonEncoder[Either[A, B]] = new JsonEncoder[Either[A, B]] {
+    override def encode(value: Either[A, B]): Json = value match {
+      case Left(value) => encoderA.encode(value)
+      case Right(value) => encoderB.encode(value)
+    }
+  }
 }
