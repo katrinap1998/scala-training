@@ -14,9 +14,15 @@ object JsonEncoder {
     override def encode(value: A): Json = f(value)
   }
 
-  implicit val intEncoder: JsonEncoder[Int] = ???
-  implicit val stringEncoder: JsonEncoder[String] = ???
-  implicit val booleanEncoder: JsonEncoder[Boolean] = ???
+  implicit val intEncoder: JsonEncoder[Int] = new JsonEncoder[Int] {
+    override def encode(value: Int): Json = Json.JsonInt(value)
+  }
+  implicit val stringEncoder: JsonEncoder[String] = new JsonEncoder[String] {
+    override def encode(value: String): Json = Json.JsonString(value)
+  }
+  implicit val booleanEncoder: JsonEncoder[Boolean] = new JsonEncoder[Boolean] {
+    override def encode(value: Boolean): Json = Json.JsonBoolean(value)
+  }
 
   implicit def arrayEncoder: JsonEncoder[JsonArray] = ???
   implicit def objectEncoder: JsonEncoder[JsonObj] = ???
